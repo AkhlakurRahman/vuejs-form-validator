@@ -1,16 +1,17 @@
 <template>
   <div>
     <label>
-      <slot />
+      {{radioInput.label}}
       <sup>&ast;</sup>
     </label>
 
-    <label v-for="(option, index) in options[0]" :key="index" class="radio-btn">
-      <input :value="index" v-bind="$attrs" />
+    <label v-for="(option, index) in radioInput.options[0]" :key="index" class="radio-btn">
+      <input :name="radioInput.name" :type="radioInput.type" :value="index" />
       {{option}}
       <span class="custom-radio-btn"></span>
     </label>
-    <slot name="validation_message" />
+
+    <span>{{radioInput.validation_message}}</span>
   </div>
 </template>
 
@@ -18,8 +19,8 @@
 export default {
   name: "RadioInput",
   props: {
-    options: {
-      type: Array
+    radioInput: {
+      type: Object
     }
   }
 };

@@ -1,13 +1,20 @@
 <template>
-  <div class="form-input">
-    <label :for="focusAttribute">
-      <slot />
-      <sup>&ast;</sup>
-    </label>
+  <div>
+    <div class="form-input">
+      <label :for="inputField.name">
+        {{inputField.label}}
+        <sup>&ast;</sup>
+      </label>
 
-    <input v-bind="$attrs" :id="focusAttribute" :value="value" />
+      <input
+        :type="inputField.type"
+        :placeholder="inputField.placeholder"
+        :name="inputField.name"
+        :id="inputField.name"
+      />
 
-    <slot name="validation_message" />
+      <span>{{inputField.validation_message}}</span>
+    </div>
   </div>
 </template>
 
@@ -15,12 +22,8 @@
 export default {
   name: "FormInput",
   props: {
-    value: {
-      type: String,
-      default: ""
-    },
-    focusAttribute: {
-      type: String
+    inputField: {
+      type: Object
     }
   }
 };

@@ -2,22 +2,13 @@
   <div class="form-control">
     <h3>Please fill up the following form</h3>
     <form @submit.prevent="onSubmit">
-      <FormInput
-        focusAttribute="first_name"
-        type="text"
-        placeholder="First Name"
-        required="true"
-      >First Name</FormInput>
-      <span slot="validation_message">First name is required</span>
+      <FormInput :inputField="firstName" />
 
-      <FormInput focusAttribute="email" type="email" placeholder="Email" required="true">Email</FormInput>
-      <span slot="validation_message">Email is required</span>
+      <FormInput :inputField="email" />
 
-      <RadioInput type="radio" :options="options" name="status">Status</RadioInput>
-      <span slot="validation_message">Status is required</span>
+      <RadioInput :radioInput="radioInput" />
 
-      <SelectInput name="internal_status" :options="options">Internal Status</SelectInput>
-      <span slot="validation_message">Internal Status is required</span>
+      <SelectInput :singleSelect="singleSelect" />
 
       <button type="submit" class="btn">Submit</button>
     </form>
@@ -33,12 +24,48 @@ export default {
   name: "app",
   data() {
     return {
-      options: [
-        {
-          valid: "Valid",
-          invalid: "Invalid"
-        }
-      ]
+      firstName: {
+        name: "first_name",
+        type: "text",
+        label: "First Name",
+        placeholder: "First Name",
+        required: true,
+        validation_message: "First name is required"
+      },
+      email: {
+        name: "email",
+        label: "Email",
+        type: "email",
+        placeholder: "Email",
+        required: true,
+        validation_message: "Email is required"
+      },
+      singleSelect: {
+        name: "internal_status",
+        type: "select",
+        label: "Internal Status",
+        required: true,
+        validation_message: "Internal Status is required",
+        options: [
+          {
+            valid: "Valid",
+            invalid: "Invalid"
+          }
+        ]
+      },
+      radioInput: {
+        name: "status",
+        type: "radio",
+        label: "Status",
+        required: true,
+        validation_message: "Status is required",
+        options: [
+          {
+            valid: "Valid",
+            invalid: "Invalid"
+          }
+        ]
+      }
     };
   },
   components: {
@@ -57,7 +84,7 @@ export default {
 <style lang="scss">
 .form-control {
   width: 60vw;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
 
   display: flex;
