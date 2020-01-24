@@ -6,12 +6,20 @@
     </label>
 
     <label v-for="(option, index) in radioInput.options[0]" :key="index" class="radio-btn">
-      <input :name="radioInput.name" :type="radioInput.type" :value="index" />
+      <input
+        :name="radioInput.name"
+        :type="radioInput.type"
+        :value="index"
+        v-model="radioInputValue"
+        @change="onRadioInputChangeHandler"
+      />
       {{option}}
       <span class="custom-radio-btn"></span>
     </label>
 
-    <span>{{radioInput.validation_message}}</span>
+    <span
+      :class="(!inputError && !radioInputValue || radioInputValue) ? 'd-none' : null"
+    >{{radioInput.validation_message}}</span>
   </div>
 </template>
 
@@ -21,6 +29,20 @@ export default {
   props: {
     radioInput: {
       type: Object
+    },
+    inputError: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => {
+    return {
+      radioInputValue: null
+    };
+  },
+  methods: {
+    onRadioInputChangeHandler: function(e) {
+      this.$emit("onRadioInputChangeHandler", e.target.value);
     }
   }
 };

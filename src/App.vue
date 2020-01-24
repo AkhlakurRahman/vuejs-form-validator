@@ -1,14 +1,30 @@
 <template>
   <div class="form-control">
     <h3>Please fill up the following form</h3>
-    <form @submit.prevent="onSubmit">
-      <FormInput :inputField="firstName" />
+    <form @submit.prevent="onSubmitHandler">
+      <TextInput
+        :textField="firstName"
+        :inputError="inputError"
+        @onTextChangeHandler="onTextChangeHandler($event)"
+      />
 
-      <FormInput :inputField="email" />
+      <EmailInput
+        :emailField="email"
+        :inputError="inputError"
+        @onEmailChangeHandler="onEmailChangeHandler($event)"
+      />
 
-      <RadioInput :radioInput="radioInput" />
+      <RadioInput
+        :radioInput="radioInput"
+        :inputError="inputError"
+        @onRadioInputChangeHandler="onRadioInputChangeHandler($event)"
+      />
 
-      <SelectInput :singleSelect="singleSelect" />
+      <SelectInput
+        :singleSelect="singleSelect"
+        :inputError="inputError"
+        @onSelectChangeHandler="onSelectChangeHandler($event)"
+      />
 
       <button type="submit" class="btn">Submit</button>
     </form>
@@ -16,7 +32,8 @@
 </template>
 
 <script>
-import FormInput from "./components/FormInput.vue";
+import TextInput from "./components/TextInput.vue";
+import EmailInput from "./components/EmailInput.vue";
 import SelectInput from "./components/SelectInput.vue";
 import RadioInput from "./components/RadioInput.vue";
 
@@ -65,17 +82,44 @@ export default {
             invalid: "Invalid"
           }
         ]
-      }
+      },
+      textInput: "",
+      emailInput: "",
+      radioBtnInput: "",
+      selectInput: "",
+      inputError: false
     };
   },
   components: {
-    FormInput,
+    TextInput,
+    EmailInput,
     SelectInput,
     RadioInput
   },
   methods: {
-    onSubmit: () => {
+    onSubmitHandler: function() {
+      if (
+        this.textInput === "" ||
+        this.emailInput === "" ||
+        this.radioBtnInput === "" ||
+        this.selectInput === ""
+      ) {
+        return (this.inputError = true);
+      }
+
       console.log("Submitted");
+    },
+    onTextChangeHandler: function(textInput) {
+      this.textInput = textInput;
+    },
+    onEmailChangeHandler: function(emailInput) {
+      this.emailInput = emailInput;
+    },
+    onRadioInputChangeHandler: function(radioInput) {
+      this.radioBtnInput = radioInput;
+    },
+    onSelectChangeHandler: function(selectInput) {
+      this.selectInput = selectInput;
     }
   }
 };
@@ -107,7 +151,7 @@ export default {
     display: block;
     color: rgb(153, 49, 49);
     font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0rem;
   }
 
   sup {

@@ -4,7 +4,12 @@
       {{singleSelect.label}}
       <sup>&ast;</sup>
     </label>
-    <select :name="singleSelect.name" :id="singleSelect.name">
+    <select
+      :name="singleSelect.name"
+      :id="singleSelect.name"
+      @change="onSelectChangeHandler"
+      v-model="selectInput"
+    >
       <option value="default">Select a status</option>
       <option
         v-for="(option, index) in singleSelect.options[0]"
@@ -13,7 +18,9 @@
       >{{ option }}</option>
     </select>
 
-    <span>{{singleSelect.validation_message}}</span>
+    <span
+      :class="(!inputError && selectInput === 'default' || selectInput !== 'default') ? 'd-none' : null"
+    >{{singleSelect.validation_message}}</span>
   </div>
 </template>
 
@@ -23,6 +30,20 @@ export default {
   props: {
     singleSelect: {
       type: Object
+    },
+    inputError: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => {
+    return {
+      selectInput: "default"
+    };
+  },
+  methods: {
+    onSelectChangeHandler: function(e) {
+      this.$emit("onSelectChangeHandler", e.target.value);
     }
   }
 };

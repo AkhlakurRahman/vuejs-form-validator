@@ -49,9 +49,29 @@ select {
   border-radius: 0.3rem;
 }
 
+.form-input {
+  width: 40rem;
+}
+
+input[type='text'],
+input[type='email'],
+input::placeholder {
+  font-family: 'Fira Sans', sans-serif;
+  color: rgb(118, 120, 128);
+  font-size: 1.6rem;
+}
+
 input:focus,
 input:active,
 select:focus,
 select:active {
   background-color: #fff;
 }
+
+.d-none {
+  opacity: 0;
+}
+
+/* .error-input-border-change {
+  border: 1px solid rgb(235, 65, 65);
+} */
