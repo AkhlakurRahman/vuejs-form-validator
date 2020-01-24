@@ -4,7 +4,7 @@
       <tr>
         <th>First Name</th>
         <th>Email</th>
-        <th>Occupations</th>
+        <th>Occupation(s)</th>
         <th>Status</th>
         <th>Internal Status</th>
       </tr>
