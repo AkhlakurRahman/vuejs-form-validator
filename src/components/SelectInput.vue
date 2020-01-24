@@ -8,7 +8,7 @@
       :name="singleSelect.name"
       :id="singleSelect.name"
       @change="onSelectChangeHandler"
-      v-model="selectInput"
+      v-model="selectInputValue"
     >
       <option value="default">Select a status</option>
       <option
@@ -19,7 +19,7 @@
     </select>
 
     <span
-      :class="(!inputError && selectInput === 'default' || selectInput !== 'default') ? 'd-none' : null"
+      :class="(!inputError && selectInputValue === 'default' || selectInputValue !== 'default') ? 'd-none' : null"
     >{{singleSelect.validation_message}}</span>
   </div>
 </template>
@@ -38,12 +38,12 @@ export default {
   },
   data: () => {
     return {
-      selectInput: "default"
+      selectInputValue: "default"
     };
   },
   methods: {
-    onSelectChangeHandler: function(e) {
-      this.$emit("onSelectChangeHandler", e.target.value);
+    onSelectChangeHandler: function() {
+      this.$emit("onSelectChangeHandler", this.selectInputValue);
     }
   }
 };

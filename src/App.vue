@@ -14,6 +14,12 @@
         @onEmailChangeHandler="onEmailChangeHandler($event)"
       />
 
+      <MultiSelect
+        :multiSelectInput="multiSelectInput"
+        :inputError="inputError"
+        @onMultiSelectChangeHandler="onMultiSelectChangeHandler($event)"
+      />
+
       <RadioInput
         :radioInput="radioInput"
         :inputError="inputError"
@@ -34,6 +40,7 @@
 <script>
 import TextInput from "./components/TextInput.vue";
 import EmailInput from "./components/EmailInput.vue";
+import MultiSelect from "./components/MultiSelect.vue";
 import SelectInput from "./components/SelectInput.vue";
 import RadioInput from "./components/RadioInput.vue";
 
@@ -56,6 +63,22 @@ export default {
         placeholder: "Email",
         required: true,
         validation_message: "Email is required"
+      },
+      multiSelectInput: {
+        name: "ocupation",
+        type: "multiple",
+        label: "Ocupation",
+        placeholder: "Select Ocupation",
+        required: true,
+        validation_message: "Ocupation is required",
+        options: [
+          {
+            doctor: "Doctor",
+            engineer: "Engineer",
+            teacher: "Teacher",
+            other: "Other"
+          }
+        ]
       },
       singleSelect: {
         name: "internal_status",
@@ -86,7 +109,8 @@ export default {
       textInput: "",
       emailInput: "",
       radioBtnInput: "",
-      selectInput: "",
+      selectInputValue: "",
+      multiSelectInputValue: [],
       inputError: false
     };
   },
@@ -94,7 +118,8 @@ export default {
     TextInput,
     EmailInput,
     SelectInput,
-    RadioInput
+    RadioInput,
+    MultiSelect
   },
   methods: {
     onSubmitHandler: function() {
@@ -102,7 +127,8 @@ export default {
         this.textInput === "" ||
         this.emailInput === "" ||
         this.radioBtnInput === "" ||
-        this.selectInput === ""
+        this.selectInputValue === "" ||
+        this.multiSelectInputValue.length <= 0
       ) {
         return (this.inputError = true);
       }
@@ -118,8 +144,11 @@ export default {
     onRadioInputChangeHandler: function(radioInput) {
       this.radioBtnInput = radioInput;
     },
-    onSelectChangeHandler: function(selectInput) {
-      this.selectInput = selectInput;
+    onSelectChangeHandler: function(selectInputValue) {
+      this.selectInputValue = selectInputValue;
+    },
+    onMultiSelectChangeHandler: function(multiSelectInputValue) {
+      this.multiSelectInputValue = [...multiSelectInputValue];
     }
   }
 };
@@ -138,7 +167,7 @@ export default {
 
   h3 {
     font-size: 2.5rem;
-    margin-bottom: 2rem;
+    margin: 3rem 0;
   }
 
   label {
@@ -168,6 +197,7 @@ export default {
     border-radius: 3px;
     padding: 1.25rem 3.5rem;
     margin-top: 3rem;
+    margin-bottom: 3rem;
     transition: all 0.3s ease-in-out;
 
     &:hover {
