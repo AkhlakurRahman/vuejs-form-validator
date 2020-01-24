@@ -11,12 +11,12 @@
         :placeholder="emailField.placeholder"
         :name="emailField.name"
         :id="emailField.name"
-        v-model="inputEmail"
+        v-model="inputEmailValue"
         @change="onEmailChangeHandler"
       />
 
       <span
-        :class="(!inputError && !inputEmail || inputEmail) ? 'd-none' : null"
+        :class="(!inputError && !inputEmailValue || inputEmailValue) ? 'd-none' : null"
       >{{emailField.validation_message}}</span>
     </div>
   </div>
@@ -36,12 +36,12 @@ export default {
   },
   data: () => {
     return {
-      inputEmail: null
+      inputEmailValue: null
     };
   },
   methods: {
-    onEmailChangeHandler: function(e) {
-      this.$emit("onEmailChangeHandler", e.target.value);
+    onEmailChangeHandler: function() {
+      this.$emit("onEmailChangeHandler", this.inputEmailValue);
     }
   }
 };

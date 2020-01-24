@@ -41,8 +41,8 @@ export default {
     };
   },
   methods: {
-    onRadioInputChangeHandler: function(e) {
-      this.$emit("onRadioInputChangeHandler", e.target.value);
+    onRadioInputChangeHandler: function() {
+      this.$emit("onRadioInputChangeHandler", this.radioInputValue);
     }
   }
 };

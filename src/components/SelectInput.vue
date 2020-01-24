@@ -4,6 +4,7 @@
       {{singleSelect.label}}
       <sup>&ast;</sup>
     </label>
+
     <select
       :name="singleSelect.name"
       :id="singleSelect.name"

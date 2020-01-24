@@ -34,6 +34,15 @@
 
       <button type="submit" class="btn">Submit</button>
     </form>
+
+    <FormDetails
+      v-if="showFormTable"
+      :inputTextValue="inputTextValue"
+      :inputEmailValue="inputEmailValue"
+      :multiSelectInputValue="multiSelectInputValue"
+      :radioInputValue="radioInputValue"
+      :selectInputValue="selectInputValue"
+    />
   </div>
 </template>
 
@@ -43,6 +52,7 @@ import EmailInput from "./components/EmailInput.vue";
 import MultiSelect from "./components/MultiSelect.vue";
 import SelectInput from "./components/SelectInput.vue";
 import RadioInput from "./components/RadioInput.vue";
+import FormDetails from "./components/FormDetails.vue";
 
 export default {
   name: "app",
@@ -106,43 +116,45 @@ export default {
           }
         ]
       },
-      textInput: "",
-      emailInput: "",
-      radioBtnInput: "",
-      selectInputValue: "",
+      inputTextValue: "",
+      inputEmailValue: "",
       multiSelectInputValue: [],
-      inputError: false
+      radioInputValue: "",
+      selectInputValue: "",
+      inputError: false,
+      showFormTable: false
     };
   },
   components: {
     TextInput,
     EmailInput,
+    MultiSelect,
     SelectInput,
     RadioInput,
-    MultiSelect
+    FormDetails
   },
   methods: {
     onSubmitHandler: function() {
       if (
-        this.textInput === "" ||
-        this.emailInput === "" ||
-        this.radioBtnInput === "" ||
+        this.inputTextValue === "" ||
+        this.inputEmailValue === "" ||
+        this.radioInputValue === "" ||
         this.selectInputValue === "" ||
         this.multiSelectInputValue.length <= 0
       ) {
         return (this.inputError = true);
       }
 
-      console.log("Submitted");
+      this.showFormTable = true;
     },
-    onTextChangeHandler: function(textInput) {
-      this.textInput = textInput;
+    onTextChangeHandler: function(inputTextValue) {
+      this.inputTextValue = inputTextValue;
     },
-    onEmailChangeHandler: function(emailInput) {
-      this.emailInput = emailInput;
+    onEmailChangeHandler: function(inputEmailValue) {
+      this.inputEmailValue = inputEmailValue;
     },
-    onRadioInputChangeHandler: function(radioInput) {
-      this.radioBtnInput = radioInput;
+    onRadioInputChangeHandler: function(radioInputValue) {
+      this.radioInputValue = radioInputValue;
     },
     onSelectChangeHandler: function(selectInputValue) {
       this.selectInputValue = selectInputValue;
@@ -156,7 +168,7 @@ export default {
 
 <style lang="scss">
 .form-control {
-  width: 60vw;
+  width: 70vw;
   min-height: 100vh;
   margin: 0 auto;
 
@@ -166,7 +178,7 @@ export default {
   align-items: center;
 
   h3 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin: 3rem 0;
   }
 

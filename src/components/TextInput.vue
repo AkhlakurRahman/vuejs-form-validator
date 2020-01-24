@@ -11,12 +11,12 @@
         :placeholder="textField.placeholder"
         :name="textField.name"
         :id="textField.name"
-        v-model="inputText"
+        v-model="inputTextValue"
         @change="onTextChangeHandler"
       />
 
       <span
-        :class="(!inputError && !inputText || inputText) ? 'd-none' : null"
+        :class="(!inputError && !inputTextValue || inputTextValue) ? 'd-none' : null"
       >{{textField.validation_message}}</span>
     </div>
   </div>
@@ -36,12 +36,12 @@ export default {
   },
   data: () => {
     return {
-      inputText: null
+      inputTextValue: null
     };
   },
   methods: {
-    onTextChangeHandler: function(e) {
-      this.$emit("onTextChangeHandler", e.target.value);
+    onTextChangeHandler: function() {
+      this.$emit("onTextChangeHandler", this.inputTextValue);
     }
   }
 };

@@ -4,6 +4,7 @@
       {{ multiSelectInput.label }}
       <sup>&ast;</sup>
     </label>
+
     <select
       :name="multiSelectInput.name"
       :id="multiSelectInput.name"
@@ -50,8 +51,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .multiselect-input {
   width: 40rem;
+
+  select {
+    color: rgb(70, 71, 75);
+  }
 }
 </style>
