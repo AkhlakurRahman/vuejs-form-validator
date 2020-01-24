@@ -1,28 +1,90 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="form-control">
+    <h3>Please fill up the following form</h3>
+    <form @submit.prevent="onSubmit">
+      <FormInput
+        focusAttribute="first_name"
+        type="text"
+        placeholder="First Name"
+        required="true"
+      >First Name</FormInput>
+      <span slot="validation_message">First name is required</span>
+
+      <FormInput focusAttribute="email" type="email" placeholder="Email" required="true">Email</FormInput>
+      <span slot="validation_message">Email is required</span>
+
+      <RadioInput type="radio" :options="options" name="status">Status</RadioInput>
+      <span slot="validation_message">Status is required</span>
+
+      <SelectInput name="internal_status" :options="options">Internal Status</SelectInput>
+      <span slot="validation_message">Internal Status is required</span>
+
+      <button type="submit">Submit</button>
+    </form>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import FormInput from "./components/FormInput.vue";
+import SelectInput from "./components/SelectInput.vue";
+import RadioInput from "./components/RadioInput.vue";
 
 export default {
-  name: 'app',
+  name: "app",
+  data() {
+    return {
+      options: [
+        {
+          valid: "Valid",
+          invalid: "Invalid"
+        }
+      ]
+    };
+  },
   components: {
-    HelloWorld
+    FormInput,
+    SelectInput,
+    RadioInput
+  },
+  methods: {
+    onSubmit: () => {
+      console.log("Submitted");
+    }
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+.form-control {
+  width: 60vw;
+  height: 100vh;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  label {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.7rem;
+  }
+
+  span {
+    display: block;
+    color: rgb(153, 49, 49);
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  sup {
+    color: rgb(153, 49, 49);
+  }
 }
 </style>

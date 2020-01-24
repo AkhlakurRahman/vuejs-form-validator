@@ -1,0 +1,55 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-weight: 300;
+  line-height: 1.6;
+  font-family: 'Fira Sans', sans-serif;
+  background-color: rgb(10, 25, 47);
+  color: rgb(136, 146, 176);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 100rem;
+  margin: auto;
+}
+
+input,
+select {
+  width: inherit;
+  padding: 1rem;
+  background-color: rgb(198, 202, 218);
+  border: 1px solid rgb(170, 178, 199);
+  outline: none;
+  border-radius: 0.3rem;
+
+  &:focus,
+  &:active {
+    background-color: #fff;
+  }
+}
