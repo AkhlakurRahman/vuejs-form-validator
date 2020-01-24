@@ -47,9 +47,11 @@ select {
   border: 1px solid rgb(170, 178, 199);
   outline: none;
   border-radius: 0.3rem;
+}
 
-  &:focus,
-  &:active {
-    background-color: #fff;
-  }
+input:focus,
+input:active,
+select:focus,
+select:active {
+  background-color: #fff;
 }

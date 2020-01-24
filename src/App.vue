@@ -19,7 +19,7 @@
       <SelectInput name="internal_status" :options="options">Internal Status</SelectInput>
       <span slot="validation_message">Internal Status is required</span>
 
-      <button type="submit">Submit</button>
+      <button type="submit" class="btn">Submit</button>
     </form>
   </div>
 </template>
@@ -85,6 +85,23 @@ export default {
 
   sup {
     color: rgb(153, 49, 49);
+  }
+
+  .btn {
+    cursor: pointer;
+    font-family: "Fira Sans", sans-serif;
+    font-size: 1.8rem;
+    color: rgb(100, 255, 218);
+    background-color: rgb(10, 25, 47);
+    border: 1px solid rgb(100, 255, 218);
+    border-radius: 3px;
+    padding: 1.25rem 3.5rem;
+    margin-top: 3rem;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background-color: rgba(100, 255, 218, 0.08);
+    }
   }
 }
 </style>
