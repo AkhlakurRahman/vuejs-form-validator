@@ -1,37 +1,43 @@
 <template>
   <div class="form-control">
-    <h3>Please fill up the following form</h3>
     <form @submit.prevent="onSubmitHandler">
-      <TextInput
-        :textField="firstName"
-        :inputError="inputError"
-        @onTextChangeHandler="onTextChangeHandler($event)"
-      />
+      <div v-for="(formField, index) in formFields.fields" :key="index">
+        <div v-html="formField.content"></div>
+        <TextInput
+          v-if="formField.type=== 'text'"
+          :textField="formField"
+          :inputError="inputError"
+          @onTextChangeHandler="onTextChangeHandler($event)"
+        />
 
-      <EmailInput
-        :emailField="email"
-        :inputError="inputError"
-        @onEmailChangeHandler="onEmailChangeHandler($event)"
-      />
+        <EmailInput
+          v-if="formField.type=== 'email'"
+          :emailField="formField"
+          :inputError="inputError"
+          @onEmailChangeHandler="onEmailChangeHandler($event)"
+        />
 
-      <MultiSelect
-        :multiSelectInput="multiSelectInput"
-        :inputError="inputError"
-        @onMultiSelectChangeHandler="onMultiSelectChangeHandler($event)"
-      />
+        <MultiSelect
+          v-if="formField.type=== 'multi-select'"
+          :multiSelectInput="formField"
+          :inputError="inputError"
+          @onMultiSelectChangeHandler="onMultiSelectChangeHandler($event)"
+        />
 
-      <RadioInput
-        :radioInput="radioInput"
-        :inputError="inputError"
-        @onRadioInputChangeHandler="onRadioInputChangeHandler($event)"
-      />
+        <RadioInput
+          v-if="formField.type=== 'radio'"
+          :radioInput="formField"
+          :inputError="inputError"
+          @onRadioInputChangeHandler="onRadioInputChangeHandler($event)"
+        />
 
-      <SelectInput
-        :singleSelect="singleSelect"
-        :inputError="inputError"
-        @onSelectChangeHandler="onSelectChangeHandler($event)"
-      />
-
+        <SelectInput
+          v-if="formField.type=== 'select'"
+          :singleSelect="formField"
+          :inputError="inputError"
+          @onSelectChangeHandler="onSelectChangeHandler($event)"
+        />
+      </div>
       <button type="submit" class="btn">Submit</button>
     </form>
 
@@ -47,6 +53,7 @@
 </template>
 
 <script>
+import formFields from "./utils/formFields";
 import TextInput from "./components/TextInput.vue";
 import EmailInput from "./components/EmailInput.vue";
 import MultiSelect from "./components/MultiSelect.vue";
@@ -58,64 +65,7 @@ export default {
   name: "app",
   data() {
     return {
-      firstName: {
-        name: "first_name",
-        type: "text",
-        label: "First Name",
-        placeholder: "First Name",
-        required: true,
-        validation_message: "First name is required"
-      },
-      email: {
-        name: "email",
-        label: "Email",
-        type: "email",
-        placeholder: "Email",
-        required: true,
-        validation_message: "Email is required"
-      },
-      multiSelectInput: {
-        name: "ocupation",
-        type: "multiple",
-        label: "Ocupation",
-        placeholder: "Select Ocupation",
-        required: true,
-        validation_message: "Ocupation is required",
-        options: [
-          {
-            doctor: "Doctor",
-            engineer: "Engineer",
-            teacher: "Teacher",
-            other: "Other"
-          }
-        ]
-      },
-      singleSelect: {
-        name: "internal_status",
-        type: "select",
-        label: "Internal Status",
-        required: true,
-        validation_message: "Internal Status is required",
-        options: [
-          {
-            valid: "Valid",
-            invalid: "Invalid"
-          }
-        ]
-      },
-      radioInput: {
-        name: "status",
-        type: "radio",
-        label: "Status",
-        required: true,
-        validation_message: "Status is required",
-        options: [
-          {
-            valid: "Valid",
-            invalid: "Invalid"
-          }
-        ]
-      },
+      formFields,
       inputTextValue: "",
       inputEmailValue: "",
       multiSelectInputValue: [],
