@@ -2,18 +2,10 @@
   <div class="form-details">
     <table>
       <tr>
-        <th>First Name</th>
-        <th>Email</th>
-        <th>Occupation(s)</th>
-        <th>Status</th>
-        <th>Internal Status</th>
+        <th v-for="(data, index) in data[0]" :key="index">{{index}}</th>
       </tr>
       <tr>
-        <td>{{inputTextValue}}</td>
-        <td>{{inputEmailValue}}</td>
-        <td>{{capitalizedFirstLetter(multiSelectInputValue)}}</td>
-        <td>{{capitalizedFirstLetter(radioInputValue)}}</td>
-        <td>{{capitalizedFirstLetter(selectInputValue)}}</td>
+        <td v-for="(data, index) in data[0]" :key="index">{{capitalizedFirstLetter(data)}}</td>
       </tr>
     </table>
   </div>
@@ -23,20 +15,8 @@
 export default {
   name: "FormDetails",
   props: {
-    inputTextValue: {
-      type: String
-    },
-    inputEmailValue: {
-      type: String
-    },
-    multiSelectInputValue: {
+    data: {
       type: Array
-    },
-    radioInputValue: {
-      type: String
-    },
-    selectInputValue: {
-      type: String
     }
   },
   methods: {

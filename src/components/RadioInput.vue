@@ -11,39 +11,65 @@
         :type="radioInput.type"
         :value="index"
         v-model="radioInputValue"
-        @change="onRadioInputChangeHandler"
+        :required="radioInput.required"
+        @change="onInputChange"
       />
       {{option}}
       <span class="custom-radio-btn"></span>
     </label>
 
     <span
-      :class="(!inputError && !radioInputValue || radioInputValue) ? 'd-none' : null"
+      :class="{dnone: !isInputFieldEmpty && isInputFieldRequired || !isInputFieldRequired}"
     >{{radioInput.validation_message}}</span>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
   name: "RadioInput",
   props: {
     radioInput: {
       type: Object
-    },
-    inputError: {
-      type: Boolean,
-      default: false
     }
   },
-  data: () => {
+  data() {
     return {
-      radioInputValue: null
+      radioInputValue: "",
+      isInputFieldRequired: this.radioInput.required,
+      isInputFieldEmpty: false
     };
   },
   methods: {
-    onRadioInputChangeHandler: function() {
-      this.$emit("onRadioInputChangeHandler", this.radioInputValue);
+    onInputChange: function() {
+      if (this.radioInputValue === "") {
+        this.isInputFieldEmpty = true;
+      } else {
+        this.isInputFieldEmpty = false;
+      }
+    },
+
+    checkIfRequiredFieldEmpty: function() {
+      return this.radioInput.required && this.radioInputValue === "";
     }
+  },
+  created() {
+    eventBus.$on("onSubmitHandler", () => {
+      this.onInputChange();
+
+      if (this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("passedAllValidation", false);
+      }
+
+      if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("onSuccesSubmission", {
+          [this.radioInput.label]: this.radioInputValue
+        });
+        this.radioInputValue = "";
+        this.isInputFieldEmpty = false;
+      }
+    });
   }
 };
 </script>

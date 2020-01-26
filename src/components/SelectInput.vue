@@ -8,10 +8,11 @@
     <select
       :name="singleSelect.name"
       :id="singleSelect.name"
-      @change="onSelectChangeHandler"
       v-model="selectInputValue"
+      :required="singleSelect.required"
+      @change="onInputChange"
     >
-      <option value="default">Select a status</option>
+      <option value="default" disabled selected>Select a status</option>
       <option
         v-for="(option, index) in singleSelect.options[0]"
         :value="index"
@@ -20,32 +21,57 @@
     </select>
 
     <span
-      :class="(!inputError && selectInputValue === 'default' || selectInputValue !== 'default') ? 'd-none' : null"
+      :class="{dnone: !isInputFieldEmpty && isInputFieldRequired || !isInputFieldRequired}"
     >{{singleSelect.validation_message}}</span>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
   name: "SelectInput",
   props: {
     singleSelect: {
       type: Object
-    },
-    inputError: {
-      type: Boolean,
-      default: false
     }
   },
-  data: () => {
+  data() {
     return {
-      selectInputValue: "default"
+      selectInputValue: "default",
+      isInputFieldRequired: this.singleSelect.required,
+      isInputFieldEmpty: false
     };
   },
   methods: {
-    onSelectChangeHandler: function() {
-      this.$emit("onSelectChangeHandler", this.selectInputValue);
+    onInputChange: function() {
+      if (this.selectInputValue === "default") {
+        this.isInputFieldEmpty = true;
+      } else {
+        this.isInputFieldEmpty = false;
+      }
+    },
+
+    checkIfRequiredFieldEmpty: function() {
+      return this.singleSelect.required && this.selectInputValue === "default";
     }
+  },
+  created() {
+    eventBus.$on("onSubmitHandler", () => {
+      this.onInputChange();
+
+      if (this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("passedAllValidation", false);
+      }
+
+      if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("onSuccesSubmission", {
+          [this.singleSelect.label]: this.selectInputValue
+        });
+        this.selectInputValue = "default";
+        this.isInputFieldEmpty = false;
+      }
+    });
   }
 };
 </script>

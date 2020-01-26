@@ -8,11 +8,12 @@
     <select
       :name="multiSelectInput.name"
       :id="multiSelectInput.name"
-      @change="onMultiSelectChangeHandler"
       v-model="multiSelectInputValue"
+      @change="onInputChange"
+      :required="multiSelectInput.required"
       multiple
     >
-      <option value="default">----Select your suitable occupation(s)----</option>
+      <option value="default" disabled selected>----{{multiSelectInput.placeholder}}(s)----</option>
       <option
         v-for="(option, index) in multiSelectInput.options[0]"
         :value="index"
@@ -21,32 +22,59 @@
     </select>
 
     <span
-      :class="(!inputError && multiSelectInputValue.length <=0 || multiSelectInputValue.length !== 0) ? 'd-none' : null"
+      :class="{dnone: !isInputFieldEmpty && isInputFieldRequired || !isInputFieldRequired}"
     >{{ multiSelectInput.validation_message }}</span>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
   name: "MultiSelect",
   props: {
     multiSelectInput: {
       type: Object
-    },
-    inputError: {
-      type: Boolean,
-      default: false
     }
   },
-  data: () => {
+  data() {
     return {
-      multiSelectInputValue: []
+      multiSelectInputValue: [],
+      isInputFieldRequired: this.multiSelectInput.required,
+      isInputFieldEmpty: false
     };
   },
   methods: {
-    onMultiSelectChangeHandler: function() {
-      this.$emit("onMultiSelectChangeHandler", this.multiSelectInputValue);
+    onInputChange: function() {
+      if (this.multiSelectInputValue.length === 0) {
+        this.isInputFieldEmpty = true;
+      } else {
+        this.isInputFieldEmpty = false;
+      }
+    },
+    checkIfRequiredFieldEmpty: function() {
+      return (
+        this.multiSelectInput.required &&
+        this.multiSelectInputValue.length === 0
+      );
     }
+  },
+  created() {
+    eventBus.$on("onSubmitHandler", () => {
+      this.onInputChange();
+
+      if (this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("passedAllValidation", false);
+      }
+
+      if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("onSuccesSubmission", {
+          [this.multiSelectInput.label]: this.multiSelectInputValue
+        });
+        this.multiSelectInputValue = "";
+        this.isInputFieldEmpty = false;
+      }
+    });
   }
 };
 </script>

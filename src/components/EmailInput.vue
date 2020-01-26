@@ -12,37 +12,63 @@
         :name="emailField.name"
         :id="emailField.name"
         v-model="inputEmailValue"
-        @change="onEmailChangeHandler"
+        :required="emailField.required"
+        @change="onInputChange"
       />
 
       <span
-        :class="(!inputError && !inputEmailValue || inputEmailValue) ? 'd-none' : null"
+        :class="{dnone: !isInputFieldEmpty && isInputFieldRequired || !isInputFieldRequired}"
       >{{emailField.validation_message}}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
   name: "EmailInput",
   props: {
     emailField: {
       type: Object
-    },
-    inputError: {
-      type: Boolean,
-      default: false
     }
   },
-  data: () => {
+  data() {
     return {
-      inputEmailValue: null
+      inputEmailValue: "",
+      isInputFieldRequired: this.emailField.required,
+      isInputFieldEmpty: false
     };
   },
   methods: {
-    onEmailChangeHandler: function() {
-      this.$emit("onEmailChangeHandler", this.inputEmailValue);
+    onInputChange: function() {
+      if (this.inputEmailValue === "") {
+        this.isInputFieldEmpty = true;
+      } else {
+        this.isInputFieldEmpty = false;
+      }
+    },
+
+    checkIfRequiredFieldEmpty: function() {
+      return this.emailField.required && this.inputEmailValue === "";
     }
+  },
+  created() {
+    eventBus.$on("onSubmitHandler", () => {
+      this.onInputChange();
+
+      if (this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("passedAllValidation", false);
+      }
+
+      if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("onSuccesSubmission", {
+          [this.emailField.label]: this.inputEmailValue
+        });
+        this.inputEmailValue = "";
+        this.isInputFieldEmpty = false;
+      }
+    });
   }
 };
 </script>

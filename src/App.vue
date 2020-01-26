@@ -1,54 +1,24 @@
 <template>
   <div class="form-control">
-    <form @submit.prevent="onSubmitHandler">
+    <form>
       <div v-for="(formField, index) in formFields.fields" :key="index">
         <div v-html="formField.content"></div>
-        <TextInput
-          v-if="formField.type=== 'text'"
-          :textField="formField"
-          :inputError="inputError"
-          @onTextChangeHandler="onTextChangeHandler($event)"
-        />
 
-        <EmailInput
-          v-if="formField.type=== 'email'"
-          :emailField="formField"
-          :inputError="inputError"
-          @onEmailChangeHandler="onEmailChangeHandler($event)"
-        />
+        <TextInput v-if="formField.type=== 'text'" :textField="formField" />
 
-        <MultiSelect
-          v-if="formField.type=== 'multi-select'"
-          :multiSelectInput="formField"
-          :inputError="inputError"
-          @onMultiSelectChangeHandler="onMultiSelectChangeHandler($event)"
-        />
+        <EmailInput v-if="formField.type === 'email'" :emailField="formField" />
 
-        <RadioInput
-          v-if="formField.type=== 'radio'"
-          :radioInput="formField"
-          :inputError="inputError"
-          @onRadioInputChangeHandler="onRadioInputChangeHandler($event)"
-        />
+        <MultiSelect v-if="formField.type=== 'multi-select'" :multiSelectInput="formField" />
 
-        <SelectInput
-          v-if="formField.type=== 'select'"
-          :singleSelect="formField"
-          :inputError="inputError"
-          @onSelectChangeHandler="onSelectChangeHandler($event)"
-        />
+        <RadioInput v-if="formField.type=== 'radio'" :radioInput="formField" />
+
+        <SelectInput v-if="formField.type=== 'select'" :singleSelect="formField" />
       </div>
-      <button type="submit" class="btn">Submit</button>
+      <button type="submit" @click.prevent="onSubmitHandler" class="btn">Submit</button>
     </form>
 
-    <FormDetails
-      v-if="showFormTable"
-      :inputTextValue="inputTextValue"
-      :inputEmailValue="inputEmailValue"
-      :multiSelectInputValue="multiSelectInputValue"
-      :radioInputValue="radioInputValue"
-      :selectInputValue="selectInputValue"
-    />
+    <FormDetails v-if="showDataTable > 0" :data="allFormData" />
+    {{allFormData}}
   </div>
 </template>
 
@@ -59,20 +29,18 @@ import EmailInput from "./components/EmailInput.vue";
 import MultiSelect from "./components/MultiSelect.vue";
 import SelectInput from "./components/SelectInput.vue";
 import RadioInput from "./components/RadioInput.vue";
-import FormDetails from "./components/FormDetails.vue";
+import FormDetails from "./components/FormDetails";
+import { eventBus } from "./main";
 
 export default {
   name: "app",
   data() {
     return {
       formFields,
-      inputTextValue: "",
-      inputEmailValue: "",
-      multiSelectInputValue: [],
-      radioInputValue: "",
-      selectInputValue: "",
-      inputError: false,
-      showFormTable: false
+      individualData: {},
+      formData: [],
+      // passedAllValidation: false,
+      showDataTable: false
     };
   },
   components: {
@@ -85,33 +53,35 @@ export default {
   },
   methods: {
     onSubmitHandler: function() {
-      if (
-        this.inputTextValue === "" ||
-        this.inputEmailValue === "" ||
-        this.radioInputValue === "" ||
-        this.selectInputValue === "" ||
-        this.multiSelectInputValue.length <= 0
-      ) {
-        return (this.inputError = true);
+      if (!this.passedAllValidation) {
+        eventBus.$emit("onSubmitHandler");
       }
-
-      this.showFormTable = true;
-    },
-    onTextChangeHandler: function(inputTextValue) {
-      this.inputTextValue = inputTextValue;
-    },
-    onEmailChangeHandler: function(inputEmailValue) {
-      this.inputEmailValue = inputEmailValue;
-    },
-    onRadioInputChangeHandler: function(radioInputValue) {
-      this.radioInputValue = radioInputValue;
-    },
-    onSelectChangeHandler: function(selectInputValue) {
-      this.selectInputValue = selectInputValue;
-    },
-    onMultiSelectChangeHandler: function(multiSelectInputValue) {
-      this.multiSelectInputValue = [...multiSelectInputValue];
     }
+
+    // allFormData: function() {
+    //   this.formData.push({
+    //     formField: { ...this.individualData }
+    //   });
+    // }
+  },
+  computed: {
+    allFormData: function() {
+      const data = [];
+      data.push({
+        ...this.individualData
+      });
+      return data;
+    }
+  },
+  created() {
+    eventBus.$on("passedAllValidation", data => {
+      this.passedAllValidation = data;
+    });
+
+    eventBus.$on("onSuccesSubmission", data => {
+      this.individualData = { ...this.individualData, ...data };
+      this.showDataTable = true;
+    });
   }
 };
 </script>

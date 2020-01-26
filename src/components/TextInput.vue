@@ -12,37 +12,62 @@
         :name="textField.name"
         :id="textField.name"
         v-model="inputTextValue"
-        @change="onTextChangeHandler"
+        :required="textField.required"
+        @change="onInputChange"
       />
 
       <span
-        :class="(!inputError && !inputTextValue || inputTextValue) ? 'd-none' : null"
+        :class="{dnone: !isInputFieldEmpty && isInputFieldRequired || !isInputFieldRequired}"
       >{{textField.validation_message}}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
   name: "TextInput",
   props: {
     textField: {
       type: Object
-    },
-    inputError: {
-      type: Boolean,
-      default: false
     }
   },
-  data: () => {
+  data() {
     return {
-      inputTextValue: null
+      inputTextValue: "",
+      isInputFieldRequired: this.textField.required,
+      isInputFieldEmpty: false
     };
   },
   methods: {
-    onTextChangeHandler: function() {
-      this.$emit("onTextChangeHandler", this.inputTextValue);
+    onInputChange: function() {
+      if (this.inputTextValue === "") {
+        this.isInputFieldEmpty = true;
+      } else {
+        this.isInputFieldEmpty = false;
+      }
+    },
+    checkIfRequiredFieldEmpty: function() {
+      return this.textField.required && this.inputTextValue === "";
     }
+  },
+  created() {
+    eventBus.$on("onSubmitHandler", () => {
+      this.onInputChange();
+
+      if (this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("passedAllValidation", false);
+      }
+
+      if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
+        eventBus.$emit("onSuccesSubmission", {
+          [this.textField.label]: this.inputTextValue
+        });
+        this.inputTextValue = "";
+        this.isInputFieldEmpty = false;
+      }
+    });
   }
 };
 </script>
