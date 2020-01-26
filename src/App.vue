@@ -1,6 +1,6 @@
 <template>
   <div class="form-control">
-    <form>
+    <form @submit.prevent="onSubmitHandler">
       <div v-for="(formField, index) in formFields.fields" :key="index">
         <div v-html="formField.content"></div>
 
@@ -14,11 +14,10 @@
 
         <SelectInput v-if="formField.type=== 'select'" :singleSelect="formField" />
       </div>
-      <button type="submit" @click.prevent="onSubmitHandler" class="btn">Submit</button>
+      <button type="submit" class="btn">Submit</button>
     </form>
 
-    <FormDetails v-if="showDataTable > 0" :data="allFormData" />
-    {{allFormData}}
+    <FormDetails v-if="showDataTable > 0" :data="formData" />
   </div>
 </template>
 
@@ -39,7 +38,6 @@ export default {
       formFields,
       individualData: {},
       formData: [],
-      // passedAllValidation: false,
       showDataTable: false
     };
   },
@@ -53,31 +51,21 @@ export default {
   },
   methods: {
     onSubmitHandler: function() {
-      if (!this.passedAllValidation) {
-        eventBus.$emit("onSubmitHandler");
+      eventBus.$emit("onSubmitHandler");
+      this.savingFormData(this.individualData);
+    },
+    savingFormData: function(individualData) {
+      if (
+        Object.keys(individualData).length !== 0 &&
+        individualData.constructor === Object
+      ) {
+        return this.formData.push({
+          ...individualData
+        });
       }
-    }
-
-    // allFormData: function() {
-    //   this.formData.push({
-    //     formField: { ...this.individualData }
-    //   });
-    // }
-  },
-  computed: {
-    allFormData: function() {
-      const data = [];
-      data.push({
-        ...this.individualData
-      });
-      return data;
     }
   },
   created() {
-    eventBus.$on("passedAllValidation", data => {
-      this.passedAllValidation = data;
-    });
-
     eventBus.$on("onSuccesSubmission", data => {
       this.individualData = { ...this.individualData, ...data };
       this.showDataTable = true;

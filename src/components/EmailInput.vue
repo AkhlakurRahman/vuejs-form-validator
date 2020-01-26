@@ -57,10 +57,6 @@ export default {
     eventBus.$on("onSubmitHandler", () => {
       this.onInputChange();
 
-      if (this.checkIfRequiredFieldEmpty()) {
-        eventBus.$emit("passedAllValidation", false);
-      }
-
       if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
         eventBus.$emit("onSuccesSubmission", {
           [this.emailField.label]: this.inputEmailValue

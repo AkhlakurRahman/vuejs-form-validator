@@ -63,10 +63,6 @@ export default {
     eventBus.$on("onSubmitHandler", () => {
       this.onInputChange();
 
-      if (this.checkIfRequiredFieldEmpty()) {
-        eventBus.$emit("passedAllValidation", false);
-      }
-
       if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
         eventBus.$emit("onSuccesSubmission", {
           [this.multiSelectInput.label]: this.multiSelectInputValue

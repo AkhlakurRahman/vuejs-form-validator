@@ -12,7 +12,7 @@
       :required="singleSelect.required"
       @change="onInputChange"
     >
-      <option value="default" disabled selected>Select a status</option>
+      <option value disabled selected>Select a status</option>
       <option
         v-for="(option, index) in singleSelect.options[0]"
         :value="index"
@@ -38,14 +38,14 @@ export default {
   },
   data() {
     return {
-      selectInputValue: "default",
+      selectInputValue: "",
       isInputFieldRequired: this.singleSelect.required,
       isInputFieldEmpty: false
     };
   },
   methods: {
     onInputChange: function() {
-      if (this.selectInputValue === "default") {
+      if (this.selectInputValue === "") {
         this.isInputFieldEmpty = true;
       } else {
         this.isInputFieldEmpty = false;
@@ -53,22 +53,18 @@ export default {
     },
 
     checkIfRequiredFieldEmpty: function() {
-      return this.singleSelect.required && this.selectInputValue === "default";
+      return this.singleSelect.required && this.selectInputValue === "";
     }
   },
   created() {
     eventBus.$on("onSubmitHandler", () => {
       this.onInputChange();
 
-      if (this.checkIfRequiredFieldEmpty()) {
-        eventBus.$emit("passedAllValidation", false);
-      }
-
       if (!this.isInputFieldEmpty && !this.checkIfRequiredFieldEmpty()) {
         eventBus.$emit("onSuccesSubmission", {
           [this.singleSelect.label]: this.selectInputValue
         });
-        this.selectInputValue = "default";
+        this.selectInputValue = "";
         this.isInputFieldEmpty = false;
       }
     });

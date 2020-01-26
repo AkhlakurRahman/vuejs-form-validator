@@ -2,10 +2,10 @@
   <div class="form-details">
     <table>
       <tr>
-        <th v-for="(data, index) in data[0]" :key="index">{{index}}</th>
+        <th v-for="(d, index) in data[0]" :key="index">{{index}}</th>
       </tr>
-      <tr>
-        <td v-for="(data, index) in data[0]" :key="index">{{capitalizedFirstLetter(data)}}</td>
+      <tr v-for="(ata, index) in data" :key="index">
+        <td v-for="(value, i) in ata" :key="i">{{capitalizedFirstLetter(value)}}</td>
       </tr>
     </table>
   </div>
