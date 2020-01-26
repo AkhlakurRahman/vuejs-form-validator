@@ -9,7 +9,7 @@ module.exports = {
       type: 'text',
       label: 'First Name',
       placeholder: 'First Name',
-      required: false,
+      required: true,
       validation_message: 'First name is required'
     },
     {
